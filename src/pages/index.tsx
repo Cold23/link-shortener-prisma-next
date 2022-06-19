@@ -7,9 +7,11 @@ const Home: NextPage = () => {
   const linkRef = useRef<HTMLInputElement>(null);
 
   const [shortenedLink, setShortenedLink] = useState<string>()
+  const [loading, setLoading] = useState<boolean>(false)
 
   const createLink = async (original?: String) => {
-    if (!original) return;
+    if (!original || loading) return;
+    setLoading(true)
     const response = await fetch('/api/create-url/create', {
       method: "POST",
       body: JSON.stringify(
@@ -23,6 +25,7 @@ const Home: NextPage = () => {
       }
     })
     const data = await response.json()
+    setLoading(false)
     setShortenedLink(`${window.location.origin}/${data}`)
 
 
@@ -34,20 +37,22 @@ const Home: NextPage = () => {
         <h1 className='self-center mb-10'  >URL SHORTENER</h1>
         <div className='self-center'>
           <table >
-            <tr>
-              <td className='px-5 py-2'>
-                <h2>Link</h2>
-              </td>
-              <td>
-                <input ref={linkRef} className='border-2 text-center' type={"text"} />
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td className='px-5 py-2'>
+                  <h2>Link</h2>
+                </td>
+                <td>
+                  <input ref={linkRef} className='border-2 text-center' type={"text"} />
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
         {shortenedLink && <div className=' py-5 self-center'>
           <a className='underline text-slate-600' target={"_blank"} rel='noreferrer' href={shortenedLink}>{shortenedLink}</a>
         </div>}
-        <button onClick={() => createLink(linkRef.current?.value)} className='bg-slate-400 rounded-lg w-fit p-3 self-center mt-8'>Shorten</button>
+        <button onClick={() => createLink(linkRef.current?.value)} className={`${loading ? "bg-slate-200" : "bg-slate-400"} rounded-lg w-fit p-3 self-center mt-8`}>Shorten</button>
       </div>
     </div>
   )

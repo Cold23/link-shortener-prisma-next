@@ -19,14 +19,10 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     }
     const data = await (await fetch(`${req.nextUrl.origin}/api/get-url/${slug}`)).json()
 
-    console.log(data)
 
     if (data?.url) {
-        let url = data?.url;
-        if (!data?.url.startsWith('http')) {
-            url = `https://${data.url}`
-        }
-        return NextResponse.redirect(url)
+
+        return NextResponse.redirect(data.url)
     }
 
 }

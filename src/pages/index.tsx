@@ -6,7 +6,7 @@ const Home: NextPage = () => {
 
   const linkRef = useRef<HTMLInputElement>(null);
 
-  const [shortenedLink, setShortenedLink] = useState()
+  const [shortenedLink, setShortenedLink] = useState<string>()
 
   const createLink = async (original?: String) => {
     if (!original) return;
@@ -23,7 +23,7 @@ const Home: NextPage = () => {
       }
     })
     const data = await response.json()
-    console.log(`${window.location.origin}/${data}`)
+    setShortenedLink(`${window.location.origin}/${data}`)
 
 
   }
@@ -44,7 +44,9 @@ const Home: NextPage = () => {
             </tr>
           </table>
         </div>
-        <h2>{shortenedLink || ""}</h2>
+        {shortenedLink && <div className=' py-5 self-center'>
+          <a className='underline text-slate-600' target={"_blank"} rel='noreferrer' href={shortenedLink}>{shortenedLink}</a>
+        </div>}
         <button onClick={() => createLink(linkRef.current?.value)} className='bg-slate-400 rounded-lg w-fit p-3 self-center mt-8'>Shorten</button>
       </div>
     </div>

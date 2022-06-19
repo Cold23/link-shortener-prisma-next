@@ -8,13 +8,9 @@ WORKDIR /home/app
 
 COPY --chown=node:node . .
 
-COPY package.json ./
-
 USER node
 
 RUN npm install
-
-COPY prisma prisma
 
 RUN npx prisma generate
 
